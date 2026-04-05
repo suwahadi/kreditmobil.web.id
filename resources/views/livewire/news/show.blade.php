@@ -13,10 +13,9 @@
         </div>
         <h1 class="text-3xl font-bold text-slate-900 leading-tight mb-2">{{ $news->title }}</h1>
         <p class="text-slate-500 text-sm mb-6">
-            {{ $news->created_at->format('d M Y, H:i:s') }}
-            · oleh <small class="font-medium">{{ $news->author?->name ?? 'Admin' }}</small>
+            {{ $news->created_at->format('d M Y, H:i:s') }} | {{ $news->author?->name ?? 'Admin' }}
         </p>
-        <article class="prose max-w-none">
+        <article class="prose max-w-none leading-relaxed [&>p]:mb-5 [&>h2]:mt-8 [&>h2]:mb-3 [&>h3]:mt-6 [&>h3]:mb-2 [&>ul]:my-5 [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:my-5 [&>ol]:list-decimal [&>ol]:pl-6 [&>img]:my-6 [&>img]:rounded-xl">
             {!! $news->content !!}
         </article>
     </div>

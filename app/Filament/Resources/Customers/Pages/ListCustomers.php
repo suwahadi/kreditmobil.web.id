@@ -11,7 +11,6 @@ class ListCustomers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        // Tidak ada aksi Create dari panel admin
         return [];
     }
 }

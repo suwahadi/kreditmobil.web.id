@@ -23,7 +23,16 @@ class UsersTable
                 TextColumn::make('phone')
                     ->searchable(),
                 TextColumn::make('role')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => ucfirst((string) $state))
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'admin' => 'danger',
+                            'manager' => 'warning',
+                            'sales' => 'success',
+                            default => 'gray',
+                        };
+                    }),
                 IconColumn::make('is_active')
                     ->boolean(),
                 TextColumn::make('created_at')

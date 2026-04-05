@@ -6,7 +6,7 @@
     <meta name="description" content="Harga Mobil Daihatsu di Astra Daihatsu dealer Resmi, Cek Promo & Diskon 2026">
     <meta name="keywords" content="daihatsu, mobil daihatsu, harga mobil daihatsu, dealer daihatsu">
     
-    <title>@yield('title', 'Astra Daihatsu - Harga Mobil Daihatsu Terbaru 2026')</title>
+    <title>@yield('title', 'Daftar Harga Mobil Daihatsu - ' . env('APP_NAME'))</title>
 
     <!-- Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,11 +117,11 @@
                 <div>
                     <h3 class="font-semibold mb-4">Produk</h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-gray-400 hover:text-white">All New Ayla</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Rocky</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Terios</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Xenia</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Sigra</a></li>
+                        <li><a href="/mobil/all-new-ayla" class="text-gray-400 hover:text-white">All New Ayla</a></li>
+                        <li><a href="/mobil/granmax-pick-up" class="text-gray-400 hover:text-white">GranMax Pick Up</a></li>
+                        <li><a href="/mobil/new-terios" class="text-gray-400 hover:text-white">New Terios</a></li>
+                        <li><a href="/mobil/all-new-xenia" class="text-gray-400 hover:text-white">All New Xenia</a></li>
+                        <li><a href="/mobil/new-sigra" class="text-gray-400 hover:text-white">New Sigra</a></li>
                     </ul>
                 </div>
 
@@ -140,15 +140,16 @@
                 <div>
                     <h3 class="font-semibold mb-4">Kontak</h3>
                     <ul class="space-y-2 text-sm text-gray-400">
+                        <li>Sales Executive</li>
                         <li>082266603388</li>
-                        <li>sales@daihatsu.dev</li>
-                        <li>Jakarta, Indonesia</li>
+                        <li>sales@kreditmobil.web.id</li>
+                        <li>https://kreditmobil.web.id</li>
                     </ul>
                 </div>
             </div>
 
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; 2026 Astra Daihatsu. All rights reserved.</p>
+                <p>&copy; 2026 {{ env('APP_NAME') }}. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -163,7 +164,6 @@
             menu.classList.toggle('hidden');
         }
 
-        // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
             const menu = document.getElementById('mobileMenu');
             const menuButton = event.target.closest('button');

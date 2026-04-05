@@ -52,7 +52,7 @@ class NewsResource extends Resource
                         ->unique(ignoreRecord: true)
                         ->required(),
                     Toggle::make('is_active')->label('Active')->default(true),
-                ])->columns(2),
+                ])->columns(2)->columnSpanFull(),
 
             Fieldset::make('Media')
                 ->schema([
@@ -89,7 +89,7 @@ class NewsResource extends Resource
                             return $path;
                         })
                         ->dehydrated(true),
-                ])->columns(1),
+                ])->columns(1)->columnSpanFull(),
 
             Fieldset::make('Content')
                 ->schema([
@@ -102,7 +102,7 @@ class NewsResource extends Resource
                         ->keyLabel('Key')
                         ->valueLabel('Value')
                         ->reorderable(false),
-                ])->columns(1),
+                ])->columns(1)->columnSpanFull(),
         ]);
     }
 
@@ -116,6 +116,7 @@ class NewsResource extends Resource
                 BooleanColumn::make('is_active')->label('Active')->sortable(),
                 TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('is_active')->options([
                     1 => 'Active',

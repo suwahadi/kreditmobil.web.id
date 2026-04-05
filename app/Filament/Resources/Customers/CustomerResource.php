@@ -12,6 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -35,26 +36,39 @@ class CustomerResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('lead_id')
-                ->label('Lead')
-                ->relationship('lead', 'lead_code')
-                ->searchable()
-                ->nullable(),
-            TextInput::make('nik')
-                ->label('NIK')
-                ->length(16)
-                ->unique(ignoreRecord: true)
-                ->required(),
-            TextInput::make('name')->label('Name')->required(),
-            Select::make('gender')->label('Gender')->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])->required(),
-            TextInput::make('phone')->label('Phone')->tel()->required(),
-            TextInput::make('email')->label('Email')->email()->nullable(),
-            Textarea::make('address')->label('Address')->rows(3)->nullable(),
-            TextInput::make('city')->label('City')->required(),
-            Placeholder::make('created_at')
-                ->label('Created At')
-                ->content(fn ($record) => optional($record?->created_at)?->format('d M Y, H:i:s') ?? '-')
-                ->hiddenOn('edit'),
+            Fieldset::make('Customer Details')
+                ->schema([
+                    TextInput::make('name')->label('Name')->required(),
+                    Select::make('gender')->label('Gender')->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])->required(),
+                ])->columns(2),
+
+            Fieldset::make('Identification')
+                ->schema([
+                    TextInput::make('nik')
+                        ->label('NIK')
+                        ->length(16)
+                        ->unique(ignoreRecord: true)
+                        ->required(),
+                    Select::make('lead_id')
+                        ->label('Lead')
+                        ->relationship('lead', 'lead_code')
+                        ->searchable()
+                        ->nullable()
+                        ->disabled()
+                        ->dehydrated(false),
+                ])->columns(2),
+
+            Fieldset::make('Contact')
+                ->schema([
+                    TextInput::make('phone')->label('Phone')->tel()->required(),
+                    TextInput::make('email')->label('Email')->email()->nullable(),
+                ])->columns(2),
+
+            Fieldset::make('Address')
+                ->schema([
+                    Textarea::make('address')->label('Address')->rows(3)->nullable()->columnSpanFull(),
+                    TextInput::make('city')->label('City')->required(),
+                ])->columns(2),
         ]);
     }
 
@@ -65,10 +79,18 @@ class CustomerResource extends Resource
                 TextColumn::make('lead.lead_code')->label('Lead Code')->searchable(),
                 TextColumn::make('name')->label('Name')->searchable(),
                 TextColumn::make('nik')->label('NIK')->searchable(),
-                TextColumn::make('gender')->label('Gender')->badge()->formatStateUsing(fn ($s) => $s === 'L' ? 'Laki-laki' : 'Perempuan')
-                    ->color(fn ($s) => $s === 'L' ? 'info' : 'pink'),
+                TextColumn::make('gender')
+                    ->label('Gender')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => in_array(strtoupper((string) $state), ['L','P'], true) ? strtoupper((string) $state) : '-')
+                    ->color(function ($state): string {
+                        return match (strtoupper((string) $state)) {
+                            'L' => 'info',
+                            'P' => 'danger',
+                            default => 'gray',
+                        };
+                    }),
                 TextColumn::make('phone')->label('Phone'),
-                TextColumn::make('email')->label('Email')->toggleable(),
                 TextColumn::make('city')->label('City')->searchable(),
                 TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable(),
                 TextColumn::make('updated_at')->dateTime('d M Y, H:i:s')->sortable()->toggleable(isToggledHiddenByDefault: true),

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CarModel extends Model
 {
@@ -69,5 +71,20 @@ class CarModel extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function getMainImageUrlAttribute(): ?string
+    {
+        $path = $this->main_image ?? null;
+        if (empty($path)) {
+            return null;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        $trimmed = ltrim($path, '/');
+        return Storage::disk('public')->url($trimmed);
     }
 }

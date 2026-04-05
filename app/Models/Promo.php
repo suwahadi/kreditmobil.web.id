@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Promo extends Model
 {
@@ -20,4 +22,19 @@ class Promo extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        $path = $this->thumbnail ?? null;
+        if (empty($path)) {
+            return null;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        $trimmed = ltrim($path, '/');
+        return Storage::disk('public')->url($trimmed);
+    }
 }

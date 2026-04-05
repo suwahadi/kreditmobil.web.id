@@ -3,7 +3,7 @@
     <a href="{{ route('car.detail', $car->slug) }}" class="block relative h-48 bg-gray-100 hover:bg-gray-200 transition-colors">
         @if($cheapestType)
             <img 
-                src="{{ !empty($car->main_image) ? $car->main_image : 'https://placehold.net/default.png' }}" 
+                src="{{ $car->main_image_url ?? 'https://placehold.net/default.png' }}" 
                 alt="{{ $car->name }}"
                 class="w-full h-full object-cover"
                 onerror="this.src='https://placehold.net/default.png'"

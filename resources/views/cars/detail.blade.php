@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $car->name . ' - Daftar Harga Mobil Daihatsu')
+@section('title', $car->name . ' - ' . env('APP_NAME'))
 
 @section('content')
 <div>

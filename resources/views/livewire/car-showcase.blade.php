@@ -28,8 +28,21 @@
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex flex-col lg:flex-row gap-8">
                 
-                <!-- Filters Sidebar -->
-                <aside class="lg:w-1/4">
+                <!-- Mobile Filter Toggle (Checkbox + Label) -->
+                <div class="lg:hidden relative">
+                    <input id="toggleFilters" type="checkbox" class="peer sr-only" />
+                    <label for="toggleFilters" class="relative z-50 w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition cursor-pointer select-none bg-white" onclick="event.preventDefault(); var cb=document.getElementById('toggleFilters'); cb.checked=!cb.checked;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                        <span class="peer-checked:hidden">Filter</span>
+                        <span class="hidden peer-checked:inline">Tutup Filter</span>
+                    </label>
+                    <div id="filtersPanel" class="mt-4 hidden peer-checked:block">
+                        <livewire:car-filters />
+                    </div>
+                </div>
+
+                <!-- Filters Sidebar (Desktop) -->
+                <aside class="lg:w-1/4 hidden lg:block">
                     <livewire:car-filters />
                 </aside>
 

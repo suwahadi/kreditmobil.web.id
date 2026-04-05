@@ -4,10 +4,9 @@ namespace App\Filament\Resources\CarModels\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -21,20 +20,18 @@ class CarModelForm
             ->components([
                 Select::make('category_id')
                     ->relationship('category', 'name')
-                    ->searchable()
                     ->required(),
                 TextInput::make('name')
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, $state) => $set('slug', Str::slug((string) $state))),
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug((string) $state))),
                 TextInput::make('slug')
                     ->unique(ignoreRecord: true)
                     ->required(),
                 Toggle::make('is_active')
                     ->default(true)
                     ->required(),
-                Textarea::make('description')
-                    ->rows(4)
+                RichEditor::make('description')
                     ->nullable()
                     ->columnSpanFull(),
                 FileUpload::make('main_image')
@@ -71,7 +68,7 @@ class CarModelForm
                         return $path;
                     })
                     ->dehydrated(true)
-                    ->required(fn (string $context) => $context === 'create'),
+                    ->required(fn (string $context) => $context === 'create')->columnSpanFull(),
             ]);
     }
 }
