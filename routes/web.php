@@ -8,6 +8,7 @@ use App\Livewire\News\NewsArchive;
 use App\Livewire\News\NewsShow;
 use App\Livewire\Promo\PromoArchive;
 use App\Livewire\Promo\PromoShow;
+use App\Livewire\Pages\Show as PageShow;
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -36,3 +37,6 @@ Route::get('/welcome', function () {
 Route::get('/thank-you', function () {
     return view('thank-you');
 })->name('thank-you');
+
+// Pages
+Route::get('/{slug}', PageShow::class)->name('page.show');

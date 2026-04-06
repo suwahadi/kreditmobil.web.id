@@ -14,6 +14,7 @@ use App\Models\Lead;
 use App\Models\Customer;
 use App\Models\News;
 use App\Models\Promo;
+use App\Models\Page;
 use App\Policies\UserPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\LeasingPolicy;
@@ -24,6 +25,7 @@ use App\Policies\LeadPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\NewsPolicy;
 use App\Policies\PromoPolicy;
+use App\Policies\PagePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Lead::class => LeadPolicy::class,
         News::class => NewsPolicy::class,
         Promo::class => PromoPolicy::class,
+        Page::class => PagePolicy::class,
     ];
 
     public function boot(): void
