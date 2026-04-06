@@ -15,7 +15,10 @@ class ListUsers extends ListRecords
         return [
             CreateAction::make()
                 ->createAnother(false)
-                ->visible(fn () => auth()->user()?->can('create', \App\Models\User::class) ?? false),
+                ->visible(fn () => auth()->user()?->can('create', \App\Models\User::class) ?? false)
+                ->label('Tambah Data')
+                ->modalHeading('Tambah Data')
+                ->modalSubmitActionLabel('Tambah Data'),
         ];
     }
 }

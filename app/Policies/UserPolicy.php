@@ -18,17 +18,29 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return $user->role === User::ROLE_ADMIN;
+        return $user->role === User::ROLE_ADMIN || $user->role === User::ROLE_MANAGER;
     }
 
     public function update(User $user, User $model): bool
     {
-        return $user->role === User::ROLE_ADMIN;
+        if ($user->role === User::ROLE_ADMIN) {
+            return true;
+        }
+        if ($user->role === User::ROLE_MANAGER && $model->role !== User::ROLE_ADMIN) {
+            return true;
+        }
+        return false;
     }
 
     public function delete(User $user, User $model): bool
     {
-        return $user->role === User::ROLE_ADMIN;
+        if ($user->role === User::ROLE_ADMIN) {
+            return true;
+        }
+        if ($user->role === User::ROLE_MANAGER && $model->role !== User::ROLE_ADMIN) {
+            return true;
+        }
+        return false;
     }
 
     public function restore(User $user, User $model): bool

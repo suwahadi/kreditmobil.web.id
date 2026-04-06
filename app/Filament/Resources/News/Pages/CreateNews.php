@@ -4,10 +4,16 @@ namespace App\Filament\Resources\News\Pages;
 
 use App\Filament\Resources\News\NewsResource;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Actions;
 
 class CreateNews extends CreateRecord
 {
     protected static string $resource = NewsResource::class;
+
+    public function getTitle(): string
+    {
+        return 'Tambah Data';
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

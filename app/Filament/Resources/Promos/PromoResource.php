@@ -20,6 +20,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -45,10 +47,16 @@ class PromoResource extends Resource
                 ->schema([
                     TextInput::make('title')
                         ->required()
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug((string) $state))),
+                        ->live(debounce: 500)
+                        ->afterStateUpdated(fn (Set $set, $state) => $set('slug', Str::slug((string) $state))),
                     TextInput::make('slug')
                         ->unique(ignoreRecord: true)
+                        ->afterStateHydrated(function ($state, Set $set, Get $get) {
+                            if (blank($state) && filled($get('title'))) {
+                                $set('slug', Str::slug((string) $get('title')));
+                            }
+                        })
+                        ->dehydrated()
                         ->required(),
                     Toggle::make('is_active')->label('Active')->default(true),
                 ])->columns(2)->columnSpanFull(),

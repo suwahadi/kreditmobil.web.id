@@ -14,7 +14,7 @@ class NewsPolicy
 
     public function view(User $user, News $news): bool
     {
-        return in_array($user->role, ['admin', 'manager']);
+        return $user->role === 'admin';
     }
 
     public function create(User $user): bool

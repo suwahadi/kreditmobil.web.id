@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
 
 class UserForm
 {
@@ -23,21 +24,28 @@ class UserForm
                 TextInput::make('phone')
                     ->tel(),
                 Select::make('role')
-                    ->options([
-                        'admin' => 'Admin',
-                        'manager' => 'Manager',
-                        'sales' => 'Sales',
-                    ])
+                    ->options(function () {
+                        $options = [
+                            'admin' => 'Admin',
+                            'manager' => 'Manager',
+                            'sales' => 'Sales',
+                        ];
+                        if (auth()->user()?->role === 'manager') {
+                            unset($options['admin']);
+                        }
+                        return $options;
+                    })
                     ->default('sales')
-                    ->required(),
-                Toggle::make('is_active')
-                    ->default(true)
                     ->required(),
                 TextInput::make('password')
                     ->password()
                     ->revealable()
                     ->dehydrated(fn ($state) => filled($state))
                     ->nullable(),
+                Toggle::make('is_active')
+                    ->default(true)
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 }

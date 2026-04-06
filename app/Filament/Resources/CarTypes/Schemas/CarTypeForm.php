@@ -7,7 +7,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -17,33 +18,44 @@ class CarTypeForm
     {
         return $schema
             ->components([
-                Select::make('car_model_id')
-                    ->relationship('carModel', 'name')
-                    ->label('Model')
-                    ->searchable()
-                    ->required(),
-                TextInput::make('name')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, $state) => $set('slug', Str::slug((string) $state))),
-                TextInput::make('slug')
-                    ->unique(ignoreRecord: true)
-                    ->required(),
-                Select::make('transmission')
-                    ->options([
-                        'MT' => 'Manual',
-                        'AT' => 'Otomatis',
-                        'CVT' => 'CVT',
+                Fieldset::make('Main')
+                    ->schema([
+                        Select::make('car_model_id')
+                            ->relationship('carModel', 'name')
+                            ->label('Model')
+                            ->required(),
+                        TextInput::make('name')
+                            ->required()
+                            ->live(debounce: 500)
+                            ->afterStateUpdated(fn (Set $set, $state) => $set('slug', Str::slug((string) $state))),
+                        TextInput::make('slug')
+                            ->unique(ignoreRecord: true)
+                            ->afterStateHydrated(function ($state, Set $set, Get $get) {
+                                if (blank($state) && filled($get('name'))) {
+                                    $set('slug', Str::slug((string) $get('name')));
+                                }
+                            })
+                            ->dehydrated()
+                            ->required(),
+                        Select::make('transmission')
+                            ->options([
+                                'MT' => 'Manual',
+                                'AT' => 'Otomatis',
+                                'CVT' => 'CVT',
+                            ])
+                            ->required(),
+                        TextInput::make('price_otr')
+                            ->label('Harga OTR')
+                            ->numeric()
+                            ->required(),
+                        Toggle::make('is_active')
+                            ->default(true)
+                            ->required(),
                     ])
-                    ->required(),
-                TextInput::make('price_otr')
-                    ->label('Harga OTR')
-                    ->numeric()
-                    ->required(),
-                Toggle::make('is_active')
-                    ->default(true)
-                    ->required(),
-                Group::make()
+                    ->columns(2)
+                    ->columnSpanFull(),
+
+                Fieldset::make('Specifications')
                     ->statePath('specifications')
                     ->schema([
                         Fieldset::make('Engine')
@@ -73,7 +85,9 @@ class CarTypeForm
                                 Toggle::make('features.esp')->label('ESP'),
                                 Toggle::make('features.hsa')->label('Hill Start Assist'),
                             ]),
-                    ]),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull(),
             ]);
     }
 }

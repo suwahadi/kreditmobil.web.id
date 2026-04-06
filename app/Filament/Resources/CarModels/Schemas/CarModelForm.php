@@ -8,6 +8,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -23,10 +25,16 @@ class CarModelForm
                     ->required(),
                 TextInput::make('name')
                     ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug((string) $state))),
+                    ->live(debounce: 500)
+                    ->afterStateUpdated(fn (Set $set, $state) => $set('slug', Str::slug((string) $state))),
                 TextInput::make('slug')
                     ->unique(ignoreRecord: true)
+                    ->afterStateHydrated(function ($state, Set $set, Get $get) {
+                        if (blank($state) && filled($get('name'))) {
+                            $set('slug', Str::slug((string) $get('name')));
+                        }
+                    })
+                    ->dehydrated()
                     ->required(),
                 Toggle::make('is_active')
                     ->default(true)

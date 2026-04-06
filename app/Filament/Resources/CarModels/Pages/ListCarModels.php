@@ -15,7 +15,10 @@ class ListCarModels extends ListRecords
         return [
             CreateAction::make()
                 ->createAnother(false)
-                ->visible(fn () => auth()->user()?->can('create', \App\Models\CarModel::class) ?? false),
+                ->visible(fn () => auth()->user()?->can('create', \App\Models\CarModel::class) ?? false)
+                ->label('Tambah Data')
+                ->modalHeading('Tambah Data')
+                ->modalSubmitActionLabel('Tambah Data'),
         ];
     }
 }

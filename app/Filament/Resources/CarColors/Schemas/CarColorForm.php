@@ -61,7 +61,8 @@ class CarColorForm
                         return $path;
                     })
                     ->dehydrated(true)
-                    ->nullable(),
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 }

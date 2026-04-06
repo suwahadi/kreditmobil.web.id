@@ -14,7 +14,7 @@ class PromoPolicy
 
     public function view(User $user, Promo $promo): bool
     {
-        return in_array($user->role, ['admin', 'manager']);
+        return $user->role === 'admin';
     }
 
     public function create(User $user): bool
