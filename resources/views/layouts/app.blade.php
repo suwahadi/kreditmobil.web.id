@@ -65,7 +65,7 @@
                     <a href="{{ route('news.index') }}" class="text-gray-700 hover:text-red-600 font-medium transition-colors">
                         Artikel / Berita
                     </a>
-                    <a href="#" class="text-gray-700 hover:text-red-600 font-medium transition-colors">
+                    <a href="/contact" class="text-gray-700 hover:text-red-600 font-medium transition-colors">
                         Hubungi Kami
                     </a>
                 </nav>
@@ -85,7 +85,7 @@
                 <a href="{{ route('home') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">Beranda</a>
                 <a href="{{ route('promo.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">Promo</a>
                 <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">Artikel / Berita</a>
-                <a href="#" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">Hubungi Kami</a>
+                <a href="/contact" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">Hubungi Kami</a>
             </div>
         </div>
     </header>
@@ -109,7 +109,7 @@
                         <span class="text-lg font-bold">Astra Daihatsu</span>
                     </div>
                     <p class="text-gray-400 text-sm">
-                        Dealer resmi mobil Daihatsu dengan harga terbaik dan pelayanan terpercaya.
+                        {{ config('app.name') }} adalah portal penjualan unit mobil Daihatsu resmi dengan harga terbaik dan pelayanan terpercaya.<br><br>Dengan didukung tim profesional kami, Anda bisa menemukan mobil yang sesuai kebutuhan Anda.
                     </p>
                 </div>
 
@@ -122,6 +122,7 @@
                         <li><a href="/mobil/new-terios" class="text-gray-400 hover:text-white">New Terios</a></li>
                         <li><a href="/mobil/all-new-xenia" class="text-gray-400 hover:text-white">All New Xenia</a></li>
                         <li><a href="/mobil/new-sigra" class="text-gray-400 hover:text-white">New Sigra</a></li>
+                        <li><a href="/mobil/new-rocky" class="text-gray-400 hover:text-white">New Rocky</a></li>
                     </ul>
                 </div>
 
@@ -130,9 +131,11 @@
                     <h3 class="font-semibold mb-4">Navigasi</h3>
                     <ul class="space-y-2 text-sm">
                         <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white">Beranda</a></li>
+                        <li><a href="/about" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
                         <li><a href="{{ route('promo.index') }}" class="text-gray-400 hover:text-white">Promo</a></li>
                         <li><a href="{{ route('news.index') }}" class="text-gray-400 hover:text-white">Artikel / Berita</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Hubungi Kami</a></li>
+                        <li><a href="/faq" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="/contact" class="text-gray-400 hover:text-white">Hubungi Kami</a></li>
                     </ul>
                 </div>
 
@@ -141,9 +144,11 @@
                     <h3 class="font-semibold mb-4">Kontak</h3>
                     <ul class="space-y-2 text-sm text-gray-400">
                         <li>Sales Executive</li>
-                        <li>082266603388</li>
-                        <li>sales@kreditmobil.web.id</li>
-                        <li>https://kreditmobil.web.id</li>
+                        <li>Telp / WA: 082266603388</li>
+                        <li>Email: sales@kreditmobil.web.id</li>
+                        <li>Web: https://kreditmobil.web.id</li>
+                        <li>Instagram: @kreditmobilwebid</li>
+                        <li>Tiktok: @kreditmobilwebid</li>
                     </ul>
                 </div>
             </div>

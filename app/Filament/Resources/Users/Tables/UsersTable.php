@@ -49,6 +49,7 @@ class UsersTable
                 \Filament\Actions\DeleteAction::make()
                     ->visible(fn ($record) => auth()->user()?->can('delete', $record) ?? false),
             ])
+            ->defaultSort('created_at', 'asc')
             ;
     }
 }

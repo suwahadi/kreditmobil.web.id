@@ -83,7 +83,7 @@ class PageResource extends Resource
                 TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable(),
                 TextColumn::make('updated_at')->dateTime('d M Y, H:i:s'),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('created_at', 'asc')
             ->filters([
                 SelectFilter::make('is_active')->options([
                     1 => 'Active',

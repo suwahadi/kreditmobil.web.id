@@ -103,6 +103,7 @@ class LeadResource extends Resource
                 TextColumn::make('submitted_at')->dateTime('d M Y, H:i:s')->sortable(),
                 TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('status')->options([
                     Lead::STATUS_NEW => 'New',

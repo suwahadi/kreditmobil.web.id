@@ -23,8 +23,13 @@
                 </a>
                 <button 
                     wire:click="openPenawaran"
-                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium cursor-pointer">
-                    Minta Penawaran
+                    wire:loading.attr="disabled"
+                    wire:target="openPenawaran"
+                    class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading wire:target="openPenawaran" class="inline-flex items-center gap-2">
+                        Mohon Tunggu...
+                    </span>
+                    <span wire:loading.remove wire:target="openPenawaran">Minta Penawaran</span>
                 </button>
             </div>
         </div>

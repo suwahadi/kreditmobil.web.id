@@ -69,7 +69,7 @@
                                 inputmode="numeric"
                                 maxlength="1"
                                 class="h-12 rounded-xl bg-gray-100 border border-gray-200 text-center text-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                wire:model.defer="otp.{{ $i }}"
+                                wire:model="otp.{{ $i }}"
                                 placeholder="•"
                                 oninput="this.value=this.value.replace(/\D/g,'').slice(0,1); if(this.value && this.nextElementSibling){ this.nextElementSibling.focus(); }"
                                 onkeydown="if(event.key==='Backspace' && !this.value && this.previousElementSibling){ this.previousElementSibling.focus(); }"

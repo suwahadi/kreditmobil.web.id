@@ -21,12 +21,12 @@ class LeadCreator
     public function create(array $data): Lead
     {
         $lead = new Lead();
-        $lead->lead_code = strtoupper(Str::random(5)) . now()->format('His') . strtoupper(Str::random(2));
+        $lead->lead_code = strtoupper(Str::random(5)) . now()->format('His') . strtoupper(Str::random(4));
         $lead->car_type_id = $data['car_type_id'] ?? null;
         $lead->customer_name = $data['customer_name'];
         $lead->phone = $this->normalizePhone($data['phone']);
-        $lead->source = $data['source'] ?? 'offer_modal';
-        $lead->channel = $data['channel'] ?? null;
+        $lead->source = $data['source'] ?? 'Website';
+        $lead->channel = $data['channel'] ?? 'WhatsApp';
         $lead->status = $data['status'] ?? Lead::STATUS_NEW;
         $lead->notes = $data['notes'] ?? null;
         $lead->sales_id = $data['sales_id'] ?? null;

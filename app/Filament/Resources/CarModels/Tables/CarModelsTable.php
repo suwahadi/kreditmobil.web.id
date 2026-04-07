@@ -21,11 +21,19 @@ class CarModelsTable
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('main_image')
                     ->label('Image')
-                    ->formatStateUsing(fn ($state) => $state ? '<img src="' . asset('storage/' . $state) . '" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">' : '')
+                    ->formatStateUsing(function ($state) {
+                        if (!$state) {
+                            return '<img src="https://placehold.net/80x80/e5e7eb/9ca3af?text=No+Image" alt="No Image" class="rounded-lg shadow-sm" style="width: 100px; object-fit: cover; display: block;" loading="lazy">';
+                        }
+                        return sprintf(
+                            '<img src="%s" alt="Model Image" class="rounded-lg shadow-sm" style="width: 100px; object-fit: cover; display: block;" loading="lazy">',
+                            asset('storage/' . $state)
+                        );
+                    })
                     ->html(),
                 TextColumn::make('category.name')->label('Category')->searchable(),
                 IconColumn::make('is_active')->boolean(),
-                TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable(),
             ])
             ->filters([
                 SelectFilter::make('is_active')
@@ -58,6 +66,7 @@ class CarModelsTable
                     ->visible(fn ($record) => auth()->user()?->can('update', $record) ?? false),
                 \Filament\Actions\DeleteAction::make()
                     ->visible(fn ($record) => auth()->user()?->can('delete', $record) ?? false),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 }

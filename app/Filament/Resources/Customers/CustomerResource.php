@@ -95,6 +95,7 @@ class CustomerResource extends Resource
                 TextColumn::make('created_at')->dateTime('d M Y, H:i:s')->sortable(),
                 TextColumn::make('updated_at')->dateTime('d M Y, H:i:s')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('gender')->options(['L' => 'Laki-laki', 'P' => 'Perempuan']),
                 SelectFilter::make('city')->options(fn () => Customer::query()->orderBy('city')->pluck('city', 'city')->toArray()),
