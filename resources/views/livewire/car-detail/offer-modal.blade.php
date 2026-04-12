@@ -36,8 +36,8 @@
                             @enderror
                         </div>
                         <label class="flex items-start gap-2 select-none">
-                            <input type="checkbox" wire:model.defer="wa_opt_in" class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                            <span class="text-sm text-gray-500">Dapatkan promo lainnya via WhatsApp</span>
+                            <input type="checkbox" wire:model.defer="wa_opt_in" class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" default="true" />
+                            <span class="text-sm text-gray-500">Pastikan nomor ini aktif WhatsApp</span>
                         </label>
                         <p class="text-xs text-gray-500">Dengan melanjutkan, Anda telah sepakat menyetujui S&amp;K.</p>
                         <button type="button" wire:click="submitForm" class="w-full rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold py-3 cursor-pointer disabled:opacity-60" wire:loading.attr="disabled" wire:target="submitForm" @disabled($isRequesting)>
@@ -53,9 +53,24 @@
                     <div class="flex items-start justify-between">
                         <h3 class="text-xl font-bold text-gray-900">Verifikasi OTP</h3>
                     </div>
-                    <p class="mt-2 mb-2 text-sm text-gray-600">
-                        {{ $notice ?? ('Kode OTP berhasil dikirim ke +62' . $this->maskedPhone . '.') }}
-                    </p>
+                    @if($notice)
+                        @if(str_contains($notice, 'salah') || str_contains($notice, 'kedaluwarsa') || str_contains($notice, 'Gagal') || str_contains($notice, 'tidak valid'))
+                            <div class="mt-2 mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                <p class="text-sm text-red-700 font-medium">{{ $notice }}</p>
+                            </div>
+                        @else
+                            <p class="mt-2 mb-2 text-sm text-gray-600">{{ $notice }}</p>
+                        @endif
+                    @else
+                        <p class="mt-2 mb-2 text-sm text-gray-600">Kode OTP berhasil dikirim ke +62{{ $this->maskedPhone }}.</p>
+                    @endif
+
+                    @if($demoOtp)
+                        <div class="mb-3 inline-flex items-center gap-2 rounded-lg bg-amber-100 border border-amber-300 px-3 py-1.5 text-sm font-mono font-bold text-amber-800 tracking-widest">
+                            <span class="text-xs font-sans font-medium text-amber-600">DEMO OTP:</span>
+                            {{ $demoOtp }}
+                        </div>
+                    @endif
 
                     <button type="button" wire:click="editPhone" class="mt-1 text-sm text-blue-600 hover:text-blue-700 inline-flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M16.862 3.487a2.25 2.25 0 113.182 3.183L7.284 19.43a5.25 5.25 0 01-2.31 1.337l-2.227.595a.75.75 0 01-.92-.92l.595-2.226a5.25 5.25 0 011.337-2.312L16.862 3.487z"/></svg>

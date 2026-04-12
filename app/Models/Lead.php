@@ -36,7 +36,6 @@ class Lead extends Model
         'meta' => 'array',
     ];
 
-    // Relationships
     public function carType()
     {
         return $this->belongsTo(CarType::class);
@@ -47,13 +46,22 @@ class Lead extends Model
         return $this->belongsTo(User::class, 'sales_id');
     }
 
-    // Scopes
     public function scopeStatus($query, string $status)
     {
         return $query->where('status', $status);
     }
 
-    // Accessors
+    public function scopePhoneExists($query, string $phone): bool
+    {
+        $digits = preg_replace('/\D/', '', $phone);
+        $digits = ltrim($digits, '0');
+        if (!str_starts_with($digits, '62')) {
+            $digits = '62' . $digits;
+        }
+
+        return $query->where('phone', $digits)->exists();
+    }
+
     public function getMaskedPhoneAttribute(): string
     {
         $digits = preg_replace('/\D/', '', (string) $this->phone);

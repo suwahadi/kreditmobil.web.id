@@ -11,8 +11,11 @@ use App\Models\Lead;
 
 class OfferModal extends Component
 {
+    protected const DEMO_OTP = true; // DEMO OTP: Set true untuk testing tanpa API Fazpass
+
     public bool $show = false;
     public string $step = 'form';
+    public ?string $demoOtp = null;
 
     public ?CarModel $car = null;
 
@@ -80,6 +83,34 @@ class OfferModal extends Component
             return;
         }
 
+        // Phone sudah ada di database → langsung buat lead tanpa OTP
+        $creator = new LeadCreator();
+        if ($creator->phoneExists($this->phone)) {
+            try {
+                $creator->create([
+                    'customer_name' => $this->name,
+                    'phone' => $this->phone,
+                    'car_type_id' => $this->car?->activeCarTypes->first()->id ?? null,
+                    'otp_id' => null,
+                    'status' => Lead::STATUS_NEW,
+                    'source' => 'offer_modal',
+                    'meta' => [
+                        'car_model_id' => $this->car?->id,
+                        'car_model_name' => $this->car?->name,
+                        'url' => request()->path(),
+                    ],
+                ]);
+                $this->resetOtpState();
+                $this->show = false;
+                return redirect()->to('/thank-you');
+            } catch (\Throwable $e) {
+                $this->addError('phone', 'Gagal membuat data lead. Coba beberapa saat lagi.');
+            } finally {
+                $this->isRequesting = false;
+            }
+            return;
+        }
+
         if ($this->otpSentAt && (time() - $this->otpSentAt) < 180) {
             $remaining = 180 - (time() - $this->otpSentAt);
             $this->notice = 'Tunggu ' . $remaining . ' detik sebelum mengirim ulang kode.';
@@ -92,10 +123,16 @@ class OfferModal extends Component
         $generatedOtp = (string) random_int(1000, 9999);
 
         try {
-            $service = new FazpassOtpService();
-            $sendPhone = '62' . ltrim($digits, '0');
-            $resp = $service->sendOtp($sendPhone, $generatedOtp);
-            $this->otpId = $resp['data']['id'] ?? null;
+            if (static::DEMO_OTP) {
+                $this->otpId = 'demo-' . $generatedOtp;
+                $this->demoOtp = $generatedOtp;
+            } else {
+                $service = new FazpassOtpService();
+                $sendPhone = '62' . ltrim($digits, '0');
+                $resp = $service->sendOtp($sendPhone, $generatedOtp);
+                $this->otpId = $resp['data']['id'] ?? null;
+                $this->demoOtp = null;
+            }
             $this->otpSentAt = time();
             $this->otpAttempts = 0;
             $this->otp = ['', '', '', ''];
@@ -176,10 +213,16 @@ class OfferModal extends Component
 
         $generatedOtp = (string) random_int(1000, 9999);
         try {
-            $service = new FazpassOtpService();
-            $sendPhone = '62' . ltrim($digits, '0');
-            $resp = $service->sendOtp($sendPhone, $generatedOtp);
-            $this->otpId = $resp['data']['id'] ?? null;
+            if (static::DEMO_OTP) {
+                $this->otpId = 'demo-' . $generatedOtp;
+                $this->demoOtp = $generatedOtp;
+            } else {
+                $service = new FazpassOtpService();
+                $sendPhone = '62' . ltrim($digits, '0');
+                $resp = $service->sendOtp($sendPhone, $generatedOtp);
+                $this->otpId = $resp['data']['id'] ?? null;
+                $this->demoOtp = null;
+            }
             $this->otpSentAt = time();
             $this->otpAttempts = 0;
             $this->otp = ['', '', '', ''];
@@ -209,9 +252,9 @@ class OfferModal extends Component
             return;
         }
 
-        // Pastikan nilai OTP terbaru (jika ada binding defer) sudah terbaca
         $otpArray = is_array($this->otp) ? $this->otp : [];
-        $code = implode('', array_map(fn($c) => preg_replace('/\D/', '', (string)$c) ?: '', $otpArray));
+        $code = implode('', $otpArray);
+
         if (strlen($code) !== 4) {
             $this->notice = 'Masukkan 4 digit kode OTP.';
             $this->isVerifying = false;
@@ -219,9 +262,15 @@ class OfferModal extends Component
         }
 
         try {
-            $service = new FazpassOtpService();
-            $service->verifyOtp($this->otpId, $code);
-            // success → create lead then reset and redirect
+            if (static::DEMO_OTP) {
+
+                if ($code !== $this->demoOtp) {
+                    throw new \RuntimeException('OTP tidak valid (demo)');
+                }
+            } else {
+                $service = new FazpassOtpService();
+                $service->verifyOtp($this->otpId, $code);
+            }
             $creator = new LeadCreator();
             $creator->create([
                 'customer_name' => $this->name,
@@ -256,6 +305,7 @@ class OfferModal extends Component
         $this->otpCountdown = 180;
         $this->canResend = false;
         $this->notice = null;
+        $this->demoOtp = null;
     }
 
     public function render()

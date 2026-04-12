@@ -18,6 +18,13 @@ class LeadCreator
         return $digits;
     }
 
+    public function phoneExists(string $rawPhone): bool
+    {
+        $normalized = $this->normalizePhone($rawPhone);
+
+        return Lead::where('phone', $normalized)->exists();
+    }
+
     public function create(array $data): Lead
     {
         $lead = new Lead();
@@ -35,11 +42,11 @@ class LeadCreator
         $lead->meta = $data['meta'] ?? null;
         $lead->save();
 
-        Log::info('[Lead] Created', [
-            'lead_code' => $lead->lead_code,
-            'phone_masked' => $lead->masked_phone,
-            'status' => $lead->status,
-        ]);
+        // Log::info('[Lead] Created', [
+        //     'lead_code' => $lead->lead_code,
+        //     'phone_masked' => $lead->masked_phone,
+        //     'status' => $lead->status,
+        // ]);
 
         return $lead;
     }
